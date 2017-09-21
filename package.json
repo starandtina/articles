@@ -9,7 +9,7 @@
   "scripts": {
     "build": "loppo",
     "serve": "loppo server",
-    "prepush": "yarn build && yarn surge",
+    "prepush": "yarn build && yarn pages",
     "pages": "gh-pages -d dist",
     "surge": "surge --domain fee.surge.sh dist"
   },
