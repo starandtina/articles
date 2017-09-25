@@ -14,7 +14,7 @@ Redux最初的源代码只有99行，但是它的核心却实现了一个相当�
 
 在Redux中，我们也可以找到与[经典的MVC](http://starandtina.github.io/2015-09-06/backbone-mvc-style-guide#real-mvc)中相似的一些概念。
 
-> 简单来说，经典的MVC架构是这样工作的。首先我们会有一个Model，它往往是整个MVC架构的中心。如果这个Model有更新了，它会通知它的观察者们某个改变发生了。然后是View，它就是我们常常能看到的UI，并且View一般会监听着Model。当View收到Model发来的更新通知时，View会更新它的外观来反映Model的更新。作为用户的我们通常是与View交互（如点击，输入事件等等），但是呢，View并不知道如何处理用户的交互操作。所以呢，View会告诉Controller用户刚刚做了什么并且假设Controller知道如果处理用户的操作。Controller这时候会更新Model，之后不会一次一次又一次一次的重复重复再重复。另外，所有通信都是单向的。
+> 简单来说，经典的MVC架构是这样工作的。首先我们会有一个Model，它往往是整个MVC架构的中心。如果这个Model有更新了，它会通知它的观察者们某个改变发生了。然后是View，它就是我们常常能看到的UI，并且View一般会监听着Model。当View收到Model发来的更新通知时，View会更新它的外观来反映Model的更新。作为用户的我们通常是与View交互（如点击，输入事件等等），但是呢，View并不知道如何处理用户的交互操作。所以呢，View会告诉Controller用户刚刚做了什么并且假设Controller知道如何处理用户的操作。Controller这时候会更新Model，之后不会一次一次又一次一次的重复重复再重复。另外，所有通信都是单向的。
 
 ### Action = Controller
 
