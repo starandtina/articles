@@ -4,7 +4,15 @@
 
 :root {
   font-size: 16px;
-  font-family: "FZLanTingHei", "Helvetica Neue", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Hiragino Kaku Gothic Pro", Meiryo, "Malgun Gothic", sans-serif;
+  font-family: "FZLanTingHei",
+    "Helvetica Neue",
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    "Hiragino Kaku Gothic Pro",
+    Meiryo,
+    "Malgun Gothic",
+    sans-serif;
   box-sizing: border-box;
 }
 
@@ -30,7 +38,6 @@ code {
   background-color: #ffdd57;
 }
 
-
 /*
  *  navbar
  */
@@ -46,7 +53,7 @@ code {
   padding-bottom: 0;
   margin-right: 0;
   margin-top: 0;
-  margin-bottom:0;
+  margin-bottom: 0;
 }
 
 .logo {
@@ -65,7 +72,6 @@ code {
 .site-title {
   text-align: center;
 }
-
 
 /*
  * book-toc
@@ -147,7 +153,6 @@ code {
   content: url(collapse.svg);
 }
 
-
 /*
  * content
  */
@@ -224,7 +229,6 @@ h1.article-title {
   display: none;
 }
 
-
 /*
  * article
  */
@@ -294,7 +298,6 @@ h1.article-title {
   content: counter(articleTOCFirstLevel) '.' counter(articleTOCSecondLevel) ' ';
 }
 
-
 /*
  * foot
  */
@@ -314,6 +317,9 @@ h1.article-title {
   margin-left: 1rem;
 }
 
+.license {
+  margin-left: 1rem;
+}
 
 /*
  * highlight
@@ -344,14 +350,11 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
   background: #23241f;
 }
 
-.hljs,
-.hljs-tag,
-.hljs-subst {
+.hljs, .hljs-tag, .hljs-subst {
   color: #f8f8f2;
 }
 
-.hljs-strong,
-.hljs-emphasis {
+.hljs-strong, .hljs-emphasis {
   color: #a8a8a2;
 }
 
@@ -364,10 +367,7 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
   color: #ae81ff;
 }
 
-.hljs-code,
-.hljs-title,
-.hljs-section,
-.hljs-selector-class {
+.hljs-code, .hljs-title, .hljs-section, .hljs-selector-class {
   color: #a6e22e;
 }
 
@@ -379,20 +379,15 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
   font-style: italic;
 }
 
-.hljs-keyword,
-.hljs-selector-tag,
-.hljs-name,
-.hljs-attr {
+.hljs-keyword, .hljs-selector-tag, .hljs-name, .hljs-attr {
   color: #f92672;
 }
 
-.hljs-symbol,
-.hljs-attribute {
+.hljs-symbol, .hljs-attribute {
   color: #66d9ef;
 }
 
-.hljs-params,
-.hljs-class .hljs-title {
+.hljs-params, .hljs-class .hljs-title {
   color: #f8f8f2;
 }
 
@@ -409,9 +404,6 @@ Monokai Sublime style. Derived from Monokai by noformnocontent http://nn.mit-lic
   color: #e6db74;
 }
 
-.hljs-comment,
-.hljs-deletion,
-.hljs-meta {
+.hljs-comment, .hljs-deletion, .hljs-meta {
   color: #75715e;
 }
-
