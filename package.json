@@ -11,7 +11,7 @@
     "serve": "loppo server",
     "prepush": "yarn build && yarn pages",
     "pages": "gh-pages -d dist",
-    "surge": "surge --domain fee.surge.sh dist"
+    "surge": "yarn build && surge --domain fee.surge.sh dist"
   },
   "keywords": [],
   "author": "",
