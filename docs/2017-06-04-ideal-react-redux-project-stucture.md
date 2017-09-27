@@ -10,7 +10,7 @@
 - 很容易知道哪个文件应该放在哪个目录里面
 - 代码重用很容易
 
-下面是我所采用的一个项目结构：
+下面是我们内部所采用的一个项目结构：
 
 ```JavaScript
 - api
@@ -44,47 +44,58 @@
 - test
 ```
 
-## api
+## **api**
 
 **api**目录是一个基于`express.js`搭建的一个本地API Mock server，可以通过`npm run api`跑起来，默认本地开发调试时，所有的API请求都会导向它。另外，我们也加入了对[faker.js](https://github.com/marak/Faker.js/)的支持，帮助我们生成大量 的模拟数据，尽量接近用户真实环境。
 
-## build
+## **build**
 
 **build**目录包含构建脚本和开发环境的基础配置。我们是使用[Webpack](http://webpack.js.org/)来作为**module bundler**的。
 
-## scripts
+## **scripts**
 
 **scripts**目录主要包含部署和一些工具脚本，如编译打包**i18n**文件。
 
-## i18n
+## **i18n**
 
 **i18n**目录包含编译后的**i18n**文件，是以`JSON`格式存在的，每个`JSON`文件中的国际化文本消息是以键值对的形式存在的。
 
-## src
+## **src**
 
 **src**目录就是包含所有项目源代码的目录。
 
-### i18n
+### **i18n**
 
 **i18n**目录包含编译前的**i18n**源文件，是以`.properties`格式存在的。
 
-### routes
+### **routes**
 
-**routes**包含项目中每个**route**的定义。
+**routes**目录包含项目中每个路由的定义。
 
-一个**route**目录包含：
+一个路由目录包含：
 
-  * 必须包含一个入口文件`index.js`，由它返回与`route`相对应的Component
-  * **components**, **containers**, **modules(redux)**, **styles**等等目录
-  * 嵌套的**child routes**，如 `events -> events/:id`
+- 必须包含一个入口文件`index.js`，由它返回与路由相对应的Component
+- **components**, **containers**, **modules(redux)**, **styles**等等目录
+- 嵌套的**child routes**，如 `events -> events/:id`
 
-从上面看出，每个`route`是由`container`和`components`来构建视图，而数据和业务逻辑则交给**reducers**, **actions**和**selectors**，另外，我们采用了[Ducks: Redux Reducer Bundles](https://github.com/erikras/ducks-modular-redux)模式，我们会把这三块放在**modules**目录中。
+从上面看出，每个路由是由`container`和`components`来构建视图，而数据和业务逻辑则交给**reducers**, **actions**和**selectors**，另外，我们采用了[Ducks: Redux Reducer Bundles](https://github.com/erikras/ducks-modular-redux)模式，我们会把这三块放在**modules**目录中。
 
-#### index.js
+这样做的好处：
 
-每个`route`必须包含一个入口文件`index.js`，它主要用于加载与`route`相对应的Component。我们希望可以把整个大的bundle拆分成可以在之后异步下载的 chunk，每个chunk对应一个`route`。例如，这允许首先提供最低限度的引导 bundle，并在稍后再异步地加载其他功能。Webpack提供了相对应的支持。
+- 一个路由就相当于一个物理级页面，它有自己的 URL
+- 通过路由来切割页面级粒度
 
-Webpack 把 [`import()`](https://github.com/tc39/proposal-dynamic-import) 作为一个代码分离点(code split-point)，并把引入的模块作为一个单独的 chunk。`import()`将模块名字作为参数并返回一个 Promoise 对象，即 `import(name) -> Promise`。
+在每个路由页面中，我们可以在纵向和横向不同的维度上，再进一步的抽象为不同的业务模块。
+
+具体请参考[分形项目结构](https://github.com/davezuko/react-redux-starter-kit/wiki/Fractal-Project-Structure)
+
+#### **index.js**
+
+每个路由必须包含一个入口文件`index.js`，它主要用于加载与路由相对应的Component。
+
+我们希望可以把整个大的 Bundle 拆分成可以在之后异步下载的 一个一个小的 Chunk ，每个 Chunk 对应一个页面路由。如此一来，就允许我们首先提供粒度最小的引导 Bundle ，并在稍后根据需要再异步地加载其它 Chuck。[Webpack提供了相对应的支持](https://webpack.js.org/guides/code-splitting/)。
+
+Webpack 支持在模块中通过函数调用实现代码切割，它把 [`import()`](https://github.com/tc39/proposal-dynamic-import) 作为一个代码分离点(code split-point)，并把引入的模块作为一个单独的 Chunk。`import()`将模块名字作为参数并返回一个 Promoise 对象，即 `import(name) -> Promise`。
 
 ```JavaScript
 import asyncComponent from 'tempest.js/components/asyncComponent'
@@ -101,23 +112,23 @@ export default Signin
 
 > 从Webpack@2.4.0开始，它引入一个叫[**magic comments**](https://webpack.js.org/api/module-methods/#import-)的新Feature，它让你可以为每个异步Chunk命名，大大简化了资源的管理和SSR。
 
-### shared
+### **shared**
 
 **shared**目录主要包含公共的**components**, **containers**, **modules(redux)**，**middlewares**，以及一些工具函数。
 
-可能大家会很奇怪这里为什么会有这些公共的目录呢？不是应该放在对应的**route**目录下面吗？
+可能大家会很奇怪这里为什么会有这些公共的目录呢？不是应该放在对应的路由目录下面吗？
 
-这是因为我们发现，一个`route`常常会跟许多**domain data**打交道，比如说，一个events列表页面，不仅需要`events`，还需要`user`和`filter`数据。从另外一个方面来讲，一个**domain data**也可以同时被多个`routes`共享，而它本身可能并不是一个`route`。所以我们会这些公共部分提取出来，达到代码重用的目的。
+这是因为我们发现，一个路由常常会跟许多**domain data**打交道，比如说，一个 Events 列表页面，不仅需要`events`，还需要`user`和`filter`数据。从另外一个方面来讲，一个**domain data**也可以同时被多个`routes`共享，而它本身可能并不是一个路由。所以我们会这些公共部分提取出来，达到代码重用的目的。
 
-### styles
+### **styles**
 
 **styles**包含整个项目的公用样式结构，如`Layout`, `variables`, `mixins`。每个组件对应的样式都是放在相对就的组件目录的。
 
-### tempest.js
+### **tempest.js**
 
 `tempest.js`是我们内部基于我们的最佳实践创建一个基于React + Redux的框架。它默认提供了一套**API**，从而帮助我们更高效便捷的创建Redux App，并最大程度的达到代码复用的目的。
 
-### index.js
+### **index.js**
 
 这是我们整个项目的入口文件`index.js`，它主要用于初始化Redux App，并启动整个Web App。
 
@@ -163,6 +174,6 @@ if (module.hot) {
 
 ```
 
-## 总结
+## **总结**
 
 目前来说这种结构对于我们来说是一种最好的解决方案，但是这种结构并不能满足所有的情况（比如SSR），但是它已经足够灵活，同时支持水平扩展，新增功能并不会侵入已有的逻辑。
