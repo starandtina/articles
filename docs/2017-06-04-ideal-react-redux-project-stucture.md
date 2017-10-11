@@ -209,7 +209,7 @@ export default Signin
 
 ## 实践原则
 
-- [使用 `.js` 作为文件名后缀](https://github.com/facebookincubator/create-react-app/issues/87#issuecomment-234627904)
+- [优先使用 `.js` 作为文件名后缀](https://github.com/facebookincubator/create-react-app/issues/87#issuecomment-234627904)
 - 每个文件只包含一个 React 组件或是一个函数
 - 每个 React 组件/模块自包含，即 JS/CSS/... 包含在组件自己的目录中，文件名需要与默认导出名一致
 - 如果某个组件/模块只在另外一个组件/模块中使用，那么就让它嵌套在另外一个组件/模块目录中

@@ -134,7 +134,9 @@
 
 ### 前端技术选型
 
-[前端开发技术日新月异](http://stateofjs.com/2016/frontend/)，在做前端技术选型架构时，团队内部会充分考虑各个框架库的优缺点，选择更加贴合项目需求的成熟技术方案。目的很简单，希望能够最大限度的帮助我们减少技术成本，提高迭代效率，运行效率，以及用户体验。
+[前端开发技术日新月异](http://stateofjs.com/2016/frontend/)，在做前端技术选型架构时，团队内部会充分考虑各个框架库的优缺点，选择更加贴合项目需求的成熟技术方案。
+
+目的很简单，希望能够最大限度的帮助我们减少技术成本，提高迭代效率，运行效率，以及用户体验。
 
 #### Single Page App(SPA)
 
@@ -148,6 +150,10 @@
 - （可选）基于[Service Worker](https://github.com/GoogleChrome/sw-precache)提供离线支持
 
 > 目前并没有使用**Node.js**来作为中间的**Web Server**层，前后端之间唯一的通信桥梁就是**Web API**。如果之后需要支持**SSR**（server-side rendering）或是**State Persistence**等等时，会考虑在前后端之间添加**Node.js**层。
+
+#### Dev Environment
+
+如何管理好上万行代码前端单页应用是团队的一个核心挑战，一个良好的项目目录结构则是首要条件，具体内容，请参考[React + Redux 最佳项目结构](/2017-06-04-ideal-react-redux-project-stucture.html)。
 
 #### React
 
@@ -163,6 +169,12 @@
 - 函数式编程
 - SSR（服务端渲染）
 - ...
+
+#### Types
+
+类型系统可以选择的很多，如 **[prop-types](https://reactjs.org/docs/typechecking-with-proptypes.html)**，**[flow](https://flow.org/)**，以及 **[TypeScript](https://www.typescriptlang.org/)**。
+
+我更倾向于 prop-types，因为它的侵入性很小，但是已经为 React 组件提供了足够的类型安全，另外再加上测试和 ESLint，在最近的项目中，很难发现运行时类型错误。
 
 #### Router
 
@@ -196,6 +208,12 @@
 
 使用基于 React 构建的**react-aui**作为基础的 UI 组件库，它包含了一系列满足我们的*Product Style Guide*的灵活，实用且可重用的组件。
 
+#### Styling
+
+对于 React 组件来说，我们可以数十种方式来为组件添加样式，比如内联样式，CSS，LESS/SASS, [CSS Modules](https://github.com/css-modules/css-modules) 以及各种 [CSS-in-JS](https://github.com/MicheleBertoli/css-in-js) 实现。
+
+目前我们选用的是 [LESS](http://lesscss.org/) + [BEM](http://css/guidelines/)，但是 LESS 我们只限定使用它的 *Variables*， *Mixins* 和 *Nested Rules*，其它功能不推荐使用。
+
 #### Yarn
 
 使用 [Yarn](https://yarnpkg.com/)来做为我们的包管理工具。
@@ -209,6 +227,17 @@
 使用[Webpack](https://webpack.js.org/)来作为Module Bundler，它提供了丰富的Loaders和Plugins来帮助我们处理各种各样的资源，同时它还支持Tree Shaking和Code Splting，可以更好的帮助我们做组件化开发与资源的管理。
 
 > 根据增量的原则，我们应该精心规划每个页面的资源加载策略，使得用户无论访问哪个页面都能按需加载页面所需资源，没访问过的无需加载，访问过的可以缓存复用，最终带来流畅的应用体验。
+
+#### 其它
+
+- 优先使用 **ES6 Class** 而不是 **[createClass](https://reactjs.org/docs/react-without-es6.html)**
+- 优先使用 **[React Stateless Functional Component](https://hackernoon.com/react-stateless-functional-components-nine-wins-you-might-have-overlooked-997b0d933dbc)** 而不是 ES6 Class Component
+- 优先使用 **[Class Prop Arrow Function](https://github.com/tc39/proposal-class-fields)** 来 Binding `this`
+- 优先使用 **[Render Prop](https://cdb.reacttraining.com/use-a-render-prop-50de598f11ce)** 而不是 **[HoC](https://reactjs.org/docs/higher-order-components.html)** 来实现复用
+- [优先使用 `.js` 作为文件名后缀](https://github.com/facebookincubator/create-react-app/issues/87#issuecomment-234627904)
+- 每个文件只包含一个 React 组件或是一个函数
+- 每个 React 组件/模块自包含，即 JS/CSS/... 包含在组件自己的目录中，文件名需要与默认导出名一致
+- 如果某个组件/模块只在另外一个组件/模块中使用，那么就让它嵌套在另外一个组件/模块目录中
 
 ### 开发流程
 
