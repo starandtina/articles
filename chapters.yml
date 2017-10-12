@@ -1,6 +1,10 @@
-- 2017-06-04-ideal-react-redux-project-stucture.md: React + Redux 最佳项目结构
-- 2017-08-25-front-end-engineering-in-active.md: 活跃网络的前端工程化实践之路
-- 2017-09-08-the-simplicity-of-redux.md: Redux的简单性
-- 2017-09-18-how-do-we-implement-i18n-based-on-react.md: 我们如何基于React实现i18n
-- 2017-09-20-i-am-jia-gou-shi.md: 大家好，我是架构师
-- 2017-09-25-active-development-workflow.md: 活跃网络前端开发流程
+- active/: ACTIVE
+- active/2017-09-25-active-development-workflow.md: 活跃网络前端开发流程
+- active/2017-08-25-front-end-engineering-in-active.md: 活跃网络的前端工程化实践之路
+
+- react/: React
+- react/2017-06-04-how-we-structure-react-redux-project-stucture.md: 我们如何组织 React + Redux 项目结构
+
+# - 2017-09-08-the-simplicity-of-redux.md: Redux的简单性
+# - 2017-09-18-how-do-we-implement-i18n-based-on-react.md: 我们如何基于React实现i18n
+

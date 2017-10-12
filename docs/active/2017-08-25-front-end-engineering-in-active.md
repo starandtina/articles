@@ -352,4 +352,3 @@
 
 > 推荐使用[husky](https://github.com/typicode/husky)来实现**Git hooks**。
 
-## 技术管理的坑

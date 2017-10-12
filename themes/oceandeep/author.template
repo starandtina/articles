@@ -1,0 +1,3 @@
+<% if (current_path !== '/') { %>
+  <p>作者：ACTIVE FEE Team</p>
+<% } %>

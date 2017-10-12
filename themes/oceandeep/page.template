@@ -31,6 +31,7 @@
   <div class="column article-container is-11-tablet is-8-desktop is-6-widescreen">
     <%= breadcrumb %>
     <h1 class="article-title"><%= page_title %></h1>
+    <% includes author %>
     <div class="article">
       <%= content %>
       <% if (current_path === '/') { %>
