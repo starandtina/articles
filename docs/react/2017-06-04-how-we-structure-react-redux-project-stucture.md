@@ -45,7 +45,7 @@
         - Header.js
         - Header.less
         - ...
-    - constans
+    - constants
     - containers
       - Header
         - HeaderContainer.js
@@ -85,7 +85,7 @@
 默认本地开发调试时，所有的 API 请求都会指向它。另外，我们也加入了对 [faker.js](https://github.com/marak/Faker.js/) 的支持，用于帮助我们生成大量的模拟数据，尽量接近真实的用户环境。
 
 ## **build**
-zuowei
+
 **build** 目录包含构建脚本和开发环境的基础配置。目前是使用 [Webpack](http://webpack.js.org/) 来作为 **module bundler**。
 
 ```
