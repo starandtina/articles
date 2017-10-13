@@ -22,6 +22,8 @@
 - [How to implement shouldComponentUpdate with this.context? react#2517](https://github.com/facebook/react/issues/2517)
 - [My views aren’t updating when something changes outside of Redux](https://github.com/reactjs/react-redux/blob/93cdfaeaf9d3e5400ffc05fe9d177118286109ca/docs/troubleshooting.md#my-views-arent-updating-when-something-changes-outside-of-redux)
 
+![l10n.gif](/images/l10n.gif)
+
 ## 实现
 
 ### 异步加载 i18n 资源
