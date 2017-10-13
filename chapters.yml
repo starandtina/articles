@@ -4,7 +4,8 @@
 
 - react/: React
 - react/2017-06-04-how-we-structure-react-redux-project-stucture.md: 我们如何组织 React + Redux 项目结构
+- react/2017-09-18-how-do-we-implement-i18n-based-on-react.md: 我们如何基于 React 实现 i18n
 
 # - 2017-09-08-the-simplicity-of-redux.md: Redux的简单性
-# - 2017-09-18-how-do-we-implement-i18n-based-on-react.md: 我们如何基于React实现i18n
+
 
