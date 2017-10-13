@@ -175,13 +175,15 @@ src
 Webpack 支持在模块中通过函数调用实现代码切割，它把 [`import()`](https://github.com/tc39/proposal-dynamic-import) 作为一个代码分离点(code split-point)，并把引入的模块作为一个单独的 Chunk。`import()` 将模块名字作为参数并返回一个 Promoise 对象，即 `import(name) -> Promise`。
 
 ```JavaScript
-import asyncComponent from 'tempest.js/components/asyncComponent'
-
-import './index.less'
+import { asyncComponent } from 'tempest.js'
 
 const Signin = asyncComponent(
-  () => import('./containers/SigninContainer').then(module => module.default),
-  { name: 'Signin' },
+  () =>
+    import(/* webpackChunkName: "signin" */
+    'shared/modules/Signin/Signin').then(module => module.default),
+  {
+    name: 'Signin',
+  },
 )
 
 export default Signin
