@@ -1,6 +1,6 @@
 - active/: ACTIVE
 - active/2017-09-25-active-development-workflow.md: 活跃网络前端开发流程
-- active/2017-08-25-front-end-engineering-in-active.md: 活跃网络的前端工程化实践之路
+# - active/2017-10-19-front-end-engineering-in-active.md: 活跃网络的前端工程化实践之路
 
 - react/: React
 - react/2017-06-04-how-we-structure-react-redux-project-stucture.md: 我们如何组织 React + Redux 项目结构
