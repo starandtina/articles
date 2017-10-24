@@ -237,6 +237,8 @@ module.exports = Object.assign(jestConfig, {
 
 ```
 
+![build-tools-package-diff](/images/build-tools-package-diff.png)
+
 #### Styling
 
 对于 React 组件来说，我们可以数十种方式来为组件添加样式，比如内联样式，CSS，LESS/SASS, [CSS Modules](https://github.com/css-modules/css-modules) 以及各种 [CSS-in-JS](https://github.com/MicheleBertoli/css-in-js) 实现。
