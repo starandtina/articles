@@ -1,7 +1,7 @@
 {
-  "name": "ACTIVE",
+  "name": "blog",
   "version": "1.0.0",
-  "description": "ACTIVE Front-End Enginnering",
+  "description": "Front-End Enginnering",
   "main": "index.js",
   "directories": {
     "doc": "docs"

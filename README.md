@@ -1,4 +1,4 @@
-# ACTIVE Front-End Enginnering
+# Front-End Enginnering
 
 ![cover](docs/images/cover.jpg)
 
