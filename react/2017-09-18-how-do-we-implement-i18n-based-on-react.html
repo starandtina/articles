@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<title>我们如何基于 React 实现 i18n - ACTIVE Front-End Enginnering</title>
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../assets/css/bulma.min.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<!--[if lt IE 9]>
+<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<link rel="shortcut icon" href="">
+</head>
+<body dir="LTR">
+
+<nav class="columns navbar">
+  <div class="column logo is-3 is-offset-1">
+    <a class="is-brand" href="../index.html">
+      ACTIVE Front-End Enginnering
+    </a>
+  </div>
+</nav>
+
+<div class="columns content">
+  <div class="column is-2-desktop is-3-widescreen is-hidden-touch">
+  </div>
+  <div class="column article-container is-11-tablet is-8-desktop is-6-widescreen">
+    <div class="breadcrumb-area"><a href="../index.html" class="breadcrumb-item">Home</a><span class="breadcrumb-delimiter"> &gt; </span><a href="../react/index.html" class="breadcrumb-item">React</a><span class="breadcrumb-delimiter"> &gt; </span><a href="../react/2017-09-18-how-do-we-implement-i18n-based-on-react.html" class="breadcrumb-item">我们如何基于 React 实现 i18n</a></div>
+    <h1 class="article-title">我们如何基于 React 实现 i18n</h1>
+    
+  <p>作者：张新</p>
+
+
+    <div class="article">
+      <p>日期：2017年09月18日</p>
+<p>简单来说，我们需要提供一套 API ，根据当前 <strong>locale</strong> 而显示不同的文本消息，日期时间，货币等等。</p>
+<blockquote>
+<p>本文不涉及基础概念问题（如什么是i18n，l10n），请自行<a href="https://stackoverflow.com/questions/754520/what-is-the-actual-differences-between-i18n-l10n-g11n-and-specifically-what-does">Google</a>。</p>
+</blockquote>
+<h2 id="目标">目标 <a class="markdownIt-Anchor" href="#目标">#</a></h2>
+<ul>
+<li>根据当前 <strong>locale</strong> 异步加载 i18n 资源，包括文本消息，日期时间，货币等等</li>
+<li><strong>locale</strong> 一旦改变，相应的文本，日期，货币会立即随着变化，<strong>无论React组件树层级多深</strong></li>
+<li>可以独立于 React 组件使用</li>
+<li>一套简单的声明式的 API 优于命令式 API</li>
+</ul>
+<p>由于我们的需求，以及下面所列种种原因，最终导致我们没有选择 <a href="https://github.com/yahoo/react-intl">react-intl</a> 作为我们的国际化解决方案。:(</p>
+<blockquote>
+<p>做为前端工程师，我们的核心任务并不是去 Build 更多的 UI 组件库，而是需要更好的去服务我们的 Business。长话短说就是，尽可能选择开源的解决方案，长远来说，这必将会降低成本和减轻风险。</p>
+</blockquote>
+<ul>
+<li><a href="https://github.com/yahoo/react-intl/pull/901">Safely use context react-intl#901</a></li>
+<li><a href="https://github.com/yahoo/react-intl/issues/660">Children don't update when context changes react-intl#660</a></li>
+<li><a href="https://github.com/facebook/react/issues/2517">How to implement shouldComponentUpdate with this.context? react#2517</a></li>
+<li><a href="https://github.com/reactjs/react-redux/blob/93cdfaeaf9d3e5400ffc05fe9d177118286109ca/docs/troubleshooting.md#my-views-arent-updating-when-something-changes-outside-of-redux">My views aren’t updating when something changes outside of Redux</a></li>
+</ul>
+<p><img src="/images/l10n.gif" alt="l10n.gif"></p>
+<h2 id="实现">实现 <a class="markdownIt-Anchor" href="#实现">#</a></h2>
+<h3 id="异步加载-i18n-资源">异步加载 i18n 资源 <a class="markdownIt-Anchor" href="#异步加载-i18n-资源">#</a></h3>
+<p>我们是用 <a href="https://webpack.js.org">Webpack</a> 来作为打包工具的，Webpack 天生就支持代码分割，按需异步加载代码块，所以无论是 Webpack@1 中的 <a href="https://webpack.js.org/api/module-methods/#require-ensure">require-ensure</a>，还是其后续者 Webpack@2 中的 <a href="https://webpack.js.org/guides/code-splitting/#dynamic-imports">import() 语法</a>，都可以帮助我们做到<em>根据当前 <strong>locale</strong> 异步加载 i18n 资源</em>。</p>
+<p>默认选择的是 <strong>import()</strong>，首先<a href="https://github.com/tc39/proposal-dynamic-import">它是符合 ECMAScript 规范的</a>，另外，从 Webpack@2.4 起，Webpack 也支持通过 <code>webpackChunkName</code> 来自定义每个区块名，已经可以完全取代 <code>require.ensure</code>。</p>
+<h3 id="react-context">React - <code>Context</code> <a class="markdownIt-Anchor" href="#react-context">#</a></h3>
+<p>首先我们是基于 React 的组件模型的，它提供了一套很好的父子组件的通信方式。一般常见方式是，父组件可以通过 <code>props</code> 传递数据给子组件，而子组件可以通过调用 <em>callback prop</em> 来回传数据，这样一来，数据流就很清晰，代码也易读并且容易维护。当出现问题时，也很容易找出问题所在，因为你知道是谁传递的这个 <code>callback</code>，是谁调用了这个 <code>callback</code>，也知道是哪两个父子组件正在通信。</p>
+<p>所以，设计思路时的第一个想法就是，我们可以通过这样单向传递的方式来逐级传递 i18n 资源的。但是，问题也随之而来了，随着组件层级的逐级加深，每个组件不得不显示的将 <code>props</code> 传递给它的子组件（即使有可能没有用到它），更槽糕的是，有些中间层组件，根本不在我们的控制之内，有可能是第三方的组件库，导致我们根本没有办法保证 i18n 资源可以逐级下传至下层组件。</p>
+<p>这里，你会突然醒悟，我们需要的一种机制，可以帮助我们做到<strong>透传</strong>。而<a href="https://facebook.github.io/react/docs/context.html">React Context</a>完美的解决了这个问题。</p>
+<blockquote>
+<p>React Context: 当一个组件在它的 <strong>Context</strong> 上定义了一些数据后，任何它的后代子组件都可以访问这些数据。</p>
+</blockquote>
+<p>这也就意味着，任何在组件树中的子组件都可以访问所在 <strong>Context</strong> 中的数据，而并不需要通过 <code>prop</code> 来传递。具体使用方法，请参考<a href="https://facebook.github.io/react/docs/context.html#how-to-use-context">官方文档</a>。</p>
+<h3 id="reactshouldcomponentupdate-observer-pattern">React@<code>shouldComponentUpdate</code> -&gt; Observer Pattern <a class="markdownIt-Anchor" href="#reactshouldcomponentupdate-observer-pattern">#</a></h3>
+<p>那么我们现在知道是在 <code>Context</code> 中放我们的 i18n 资源数据，那么 <code>Context</code> 是什么时候会更新呢？</p>
+<p><a href="https://facebook.github.io/react/docs/context.html#updating-context">官方文档是这样写的</a>：</p>
+<blockquote>
+<p>The <code>getChildContext</code> function will be called when the state or props changes. In order to update data in the context, trigger a local state update with this.setState. This will trigger a new context and changes will be received by the children.</p>
+</blockquote>
+<p>但是 <code>Context</code> 更新了之后，在组件树中的后代子组件能够同步获取最新值吗？如果可以，又是如何获取的呢？</p>
+<p>这就取决于中间层组件的 <code>shouldComponentUpdate</code> 实现。</p>
+<p>任何一个 React 组件都可以定义自己的 <code>shouldComponentUpdate</code> 实现（或者继承自 <code>PureComponent</code> ），如果它返回 <code>false</code>，那就表明该组件及其子组件都不需要重新渲染。但是，如果某一个中间层组件的 <code>shouldComponentUpdate</code> 也返回 <code>false</code>，那么该组件的子组件也就不会更新，即使是当前组件树中的 <code>Context</code> 已经变了。:)</p>
+<p>一图胜千言:</p>
+<pre class="hljs"><code>高层组件（包含 context.color 定义）
+
+    中间层组件（`shouldComponentUpdate` 返回 false）
+        ...
+            ....
+                子组件（从当前 context 中获取数据）
+    ...
+    ...
+</code></pre>
+<p>以上图为例，如果 <code>context.color</code> 更新了，子组件是不会重新渲染的，因为它的父级组件的 <code>shouldComponentUpdate</code> 返回了 <code>false</code>。这样直接导致的结果就是 - <strong>全乱套了</strong>，UI 和状态之间无法同步，从而导致各种莫名其妙的 Bugs，这也是大家常常不愿意用它的另外一个重要原因。</p>
+<p>那么，怎么解决呢？答案就是 <strong><code>Context</code> + Observer Pattern</strong>。</p>
+<p>首先，我们会有二个假设：</p>
+<ul>
+<li><code>Context</code> 是 <strong>immutable</strong> 的，并且由当前组件自己维护自己的内部状态</li>
+<li>子组件只需要接受一次 <code>Context</code>，之后 <code>Context</code> 的更新都能<a href="https://addyosmani.com/resources/essentialjsdesignpatterns/book/#observerpatternjavascript">通过订阅获取</a></li>
+</ul>
+<p>设计方案有了，接下来，我们来看看如何设计我们的 API。</p>
+<h3 id="api-设计">API 设计 <a class="markdownIt-Anchor" href="#api-设计">#</a></h3>
+<h4 id="l10n"><code>L10n</code> <a class="markdownIt-Anchor" href="#l10n">#</a></h4>
+<p>它主要用于：</p>
+<ul>
+<li>实现观察者模式并且维护观察者列表</li>
+<li>当 <strong>locale</strong> 改变时，负责通知所有观察者，如 <code>L10nMessage</code>，<code>L10nDateTime</code>，<code>L10nCurrency</code> 或是其它通过 <code>injecctL10n</code> 注入的组件</li>
+<li>提供格式化工具方法，如 <code>formatMessage</code>，<code>formatDateTime</code>，<code>formatCurrency</code> 等等</li>
+</ul>
+<h4 id="l10nprovider"><code>L10nProvider</code> <a class="markdownIt-Anchor" href="#l10nprovider">#</a></h4>
+<p>它主要用于：</p>
+<ul>
+<li>根据当前 <strong>locale</strong> 异步加载 i18n 资源</li>
+<li>封装 <code>L10n</code> 对象，通过 <code>Context</code> 暴露给子级组件</li>
+<li>通常来说，它会作为整个应用最顶层组件使用（如 <code>Provider</code> ），其它 <code>L10nXXX</code> 组件不能脱离它独立使用</li>
+</ul>
+<h4 id="injectl10n"><code>injectL10n</code> <a class="markdownIt-Anchor" href="#injectl10n">#</a></h4>
+<p>它主要用于：</p>
+<ul>
+<li>根据当前 <code>Context</code> 中的 <code>l10n</code> 对象，生成一个新的 <strong>Bounded 的 l10n 对象</strong>，然后以 <em>props</em> 的形式自动注入到绑定组件中</li>
+<li>实现自动注入 <code>l10n</code>，并且订阅 <code>l10n</code> 资源的更新，一旦有任何更新，进而会调用 <code>forceUpdate</code> 强制更新组件</li>
+</ul>
+<pre class="hljs"><code>getBoundL10n = () =&gt; {
+  const l10n = this.context...
+  const boundFuncs = ...
+  const boundConfig = ...
+  return {
+    [l10nName]: {
+      ...l10n,
+      ...boundConfig,
+      ...boundFuncs,
+    },
+  }
+}
+</code></pre>
+<p>这样就保证在 <strong>locale</strong> 或是其它资源（如 <code>messages</code> ）变化后，被注入的组件会有 <code>props</code> 的变化，从而会触发组件的重新渲染，进而重新获取 <code>l10n</code> 中的数据</p>
+<h4 id="l10nmessage"><code>L10nMessage</code> <a class="markdownIt-Anchor" href="#l10nmessage">#</a></h4>
+<p><code>L10nMessage</code> 是 <code>l10n.formatMessage</code> 方法的组件封装，它根据当前传入的 <code>id</code>，找到对应的文本信息，同时也支持字符串插值。</p>
+<p><img src="/images/L10nMessage.js.png" alt="L10nMessage.js"></p>
+<h4 id="l10ndatetime"><code>L10nDateTime</code> <a class="markdownIt-Anchor" href="#l10ndatetime">#</a></h4>
+<p><code>L10nDateTime</code> 是 <code>l10n.formatDateTime</code> 的组件封装，它根据当前传入的 <code>date</code> 对象和日期时间的 <code>format</code>，转换回对应 <code>format</code> 的字符串形式。</p>
+<p>比如，<code>en_US</code> 的长日期时间格式为 <code>MMMM d, yyyy h:mm a</code>，然后传入当前的 <code>date</code> 后，就会转换为 <code>2017/09/31 11:30 a.m.</code></p>
+<h4 id="l10ncurrency"><code>L10nCurrency</code> <a class="markdownIt-Anchor" href="#l10ncurrency">#</a></h4>
+<p><code>L10nCurrency</code> 是 <code>l10n.formatCurrency</code> 的组件封装，它根据传入的数值 <code>amount</code> 和货币代码 <code>code</code> （如 <code>USD</code> ）,转换回对应格式的字符串表示形式。同时，用户可以指定以下选项：</p>
+<pre class="hljs"><code>{
+  integerOnly: false, // 是否是整数形式
+  separationCount: 3, // 多少字符做分隔
+  separator: ',',     // 数字之间的分隔符
+  negativeMark: '-',  // 是否需要添加负号标记
+}
+</code></pre>
+<h3 id="数据流">数据流 <a class="markdownIt-Anchor" href="#数据流">#</a></h3>
+<p>那么，有了这些 API 组件后，它们之间是如何协同工作的呢？</p>
+<p>以下面这个典型的组件树为例：</p>
+<pre class="hljs"><code>&lt;L10nProvider locale='zh_CN'&gt;
+  ...
+    &lt;UpdateBlocker&gt;
+        &lt;L10nMessage id='save' /&gt;
+        ...
+    &lt;/UpdateBlocker&gt;
+  &lt;Form&gt;
+    &lt;Field
+      placeholder={l10n.formatMessage('save')}
+    /&gt;
+  &lt;/Form&gt;
+&lt;/L10nProvider&gt;
+</code></pre>
+<blockquote>
+<p><code>UpdateBlocker</code>组件意味着该组件的<code>shouldComponentUpdate</code> 生命周期方法始终返回 <code>false</code></p>
+</blockquote>
+<ul>
+<li>在 <code>L10nProvider</code> 中，会首先初始化一个 <code>L10n</code> 对象或是传入的 <code>L10n</code> 对象</li>
+<li><code>DateTimeSymbols</code>，<code>currenciesConfig</code> 和 <code>en_US</code> 的 i18n 文本消息，会默认绑定到上一步生成的 <code>L10n</code> 对象上</li>
+<li>在 <code>L10nProvider</code> 的 <code>componentDidMount</code> 生命周期方法中，会去动态加载指定 <code>locale</code> 的文本消息（此处是 <code>zh_CN</code> ）
+<ul>
+<li>加载成功后，会与当前 <code>this.l10n.messages</code> 合并</li>
+<li>通知所有订阅子组件（通过 <code>injectL10n</code> 实现自动注入和订阅l10n的更新的组件，如 <code>L10nMessage</code> ）</li>
+</ul>
+</li>
+<li>子组件收到更新通知后，会从当前 <code>Context</code> 中，拿到 immutable 的 <code>L10n</code> 对象后，重新生成一个新的 <code>L10n</code> 对象字面量，然后以 <code>prop</code> 的形式注入到绑定组件中</li>
+<li>最后，子组件调用对应的格式化方法</li>
+</ul>
+<h2 id="总结">总结 <a class="markdownIt-Anchor" href="#总结">#</a></h2>
+<p>通过实现 i18n 组件让我们更加深入的了解了 React 的组件模型，以及组件之间的通信方式。对于组件化的编程模型有了更加深入的思考和探索，这样的经历，又何乐而不为呢？:)</p>
+
+      
+    </div>
+    <div  dir="ltr" class="level article-bar is-mobile">
+      <div class="level-item has-text-centered">
+        <a title="previous page" class="previouse-article-link" href="../react/2017-09-08-the-simplicity-of-redux.html"><span class="icon icon-previous" data-icon="previous"></span><span class="link-content">&laquo; Previous</span></a>
+      </div>
+      <div class="level-item has-text-centered">
+        <a title="font size" class="link-item link-item-size">
+          <span class="icon icon-size" data-icon="size"></span>
+        </a>
+      </div>
+      <div class="level-item has-text-centered">
+        <a title="table of content" class="link-item link-item-toc">
+          <span class="icon icon-toc" data-icon="toc"></span>
+        </a>
+      </div>
+      <div class="level-item has-text-centered">
+        <a title="top" href="#">
+          <span class="icon icon-up" data-icon="up"></span>
+          <span class="link-content">⤊ Top</span>
+        </a>
+      </div>
+      <div class="level-item has-text-centered">
+        <a title="next page" class="next-article-link link-disabled"><span class="icon icon-next-disabled" data-icon="next-disabled"></span></a>
+      </div>
+    </div>
+  </div>
+  <div class="column is-2-widescreen is-hidden">
+  </div>
+</div>
+
+<div class="columns foot">
+  <div class="column is-8 is-offset-1 license">
+    <p>网站内容许可证：公共领域（public domain）</p>
+  </div>
+  <div class="column is-3 build-by">
+    Build by <a href="https://github.com/ruanyf/loppo" target="_blank">Loppo</a> 0.4.4
+  </div>
+</div>
+
+<div class="book-toc notification is-warning is-hidden">
+  <h3>Table of chapters &nbsp;<span class="title-close"><a class="button is-danger"> Close </a></span></h3>
+  <ul class="chapter-area"><li class="chapter-item "><a href="../active/index.html">ACTIVE</a>&nbsp;<a class="first-level-collapse"><span class="icon icon-expand" data-icon="expand"></span></a></li><ul class="chapter-level-1"><li class="chapter-item "><a href="../active/2017-09-25-active-development-workflow.html">活跃网络前端开发流程</a></li><li class="chapter-item "><a href="../active/2017-10-23-active-china-fee-hiring-process.html">活跃网络前端工程师招聘流程</a></li><li class="chapter-item "><a href="../active/2017-10-19-front-end-engineering-in-active.html">活跃网络的前端工程化实践之路</a></li></ul><li class="chapter-item "><a href="../react/index.html">React</a>&nbsp;<a class="first-level-collapse"><span class="icon icon-collapse" data-icon="collapse"></span></a></li><ul class="chapter-level-1 chapter-level-1-current"><li class="chapter-item "><a href="../react/2017-06-04-how-we-structure-react-redux-project-stucture.html">我们如何组织 React + Redux 项目结构</a></li><li class="chapter-item "><a href="../react/2017-09-08-the-simplicity-of-redux.html">Redux的简单性</a></li><li class="chapter-item chapter-item-current"><a href="../react/2017-09-18-how-do-we-implement-i18n-based-on-react.html">我们如何基于 React 实现 i18n</a></li></ul></ul>
+</div>
+
+<div class="progress-indicator"></div>
+
+<!-- SCRIPTS -->
+<script>
+  var LOPPO = {};
+  LOPPO.current_path = 'react/2017-09-18-how-do-we-implement-i18n-based-on-react.md';
+  LOPPO.relative_root_path = '../';
+  LOPPO.article_toc = "<ul class=\"markdownIt-TOC\">\n<li><a href=\"#%E7%9B%AE%E6%A0%87\">目标</a></li>\n<li><a href=\"#%E5%AE%9E%E7%8E%B0\">实现</a>\n<ul>\n<li><a href=\"#%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD-i18n-%E8%B5%84%E6%BA%90\">异步加载 i18n 资源</a></li>\n<li><a href=\"#react-context\">React - <code>Context</code></a></li>\n<li><a href=\"#reactshouldcomponentupdate-observer-pattern\">React@<code>shouldComponentUpdate</code> -&gt; Observer Pattern</a></li>\n<li><a href=\"#api-%E8%AE%BE%E8%AE%A1\">API 设计</a></li>\n<li><a href=\"#%E6%95%B0%E6%8D%AE%E6%B5%81\">数据流</a></li>\n</ul>\n</li>\n<li><a href=\"#%E6%80%BB%E7%BB%93\">总结</a></li>\n</ul>\n";
+</script>
+<script src="../assets/js/app.js"></script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?8abfc12836cb16954eaaccc965864e54";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>
+
