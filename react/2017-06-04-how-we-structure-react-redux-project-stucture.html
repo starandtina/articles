@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta charset="utf-8">
+<title>我们如何组织 React + Redux 项目结构 - Front-End Enginnering</title>
+<meta name="description" content="">
+<meta name="author" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+<link rel="stylesheet" href="../assets/css/bulma.min.css">
+<link rel="stylesheet" href="../assets/css/app.css">
+<!--[if lt IE 9]>
+<script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+<link rel="shortcut icon" href="">
+</head>
+<body dir="LTR">
+
+<nav class="columns navbar">
+  <div class="column logo is-3 is-offset-1">
+    <a class="is-brand" href="../index.html">
+      Front-End Enginnering
+    </a>
+  </div>
+</nav>
+
+<div class="columns content">
+  <div class="column is-2-desktop is-3-widescreen is-hidden-touch">
+  </div>
+  <div class="column article-container is-11-tablet is-8-desktop is-6-widescreen">
+    <div class="breadcrumb-area"><a href="../index.html" class="breadcrumb-item">Home</a><span class="breadcrumb-delimiter"> &gt; </span><a href="../react/index.html" class="breadcrumb-item">React</a><span class="breadcrumb-delimiter"> &gt; </span><a href="../react/2017-06-04-how-we-structure-react-redux-project-stucture.html" class="breadcrumb-item">我们如何组织 React + Redux 项目结构</a></div>
+    <h1 class="article-title">我们如何组织 React + Redux 项目结构</h1>
+    
+  <p>作者：张新</p>
+
+
+    <div class="article">
+      <p>最近一年多，在公司的很多项目上都采用了 React/Redux 技术栈，对于 React 或是 Redux 本身没有多大的问题，但是有一个问题一直困扰着我们，那就是<strong>如何组织项目的代码结构</strong>。</p>
+<p>最近工作在<a href="https://readercloud.active.com">一个全新的前端项目上</a>，前端仍然是 React + Redux，与后端通过 API Service/Web Socket 交互，也就是说 Routes, View, States 以及业务逻辑等等全部放在前端处理的，这个对于活跃网络前端来说，是一个全新的尝试，所以重新思考了一下关于如何项目的代码结构。</p>
+<p>对于如何组织项目目录结构，特别是针对 React Web App，有一些基本要求是必须达到的：</p>
+<ul>
+<li>对于任何大小的项目必须保持可扩展性和灵活性</li>
+<li>很容易知道哪个文件应该放在哪个目录里面</li>
+<li>很容易在各个代码源文件之间导航（无论是打开一个已知/未知文件，又或是在编辑器中自由的在文件 Tab 之间切换）</li>
+<li>代码重用很容易</li>
+</ul>
+<p>下面是我们目前所采用的一个项目目录结构：</p>
+<pre class="hljs"><code>- api
+- build
+- scripts
+- i18n
+  - en_US.json
+  _ zh_CN.json
+  ...
+- src
+  - i18n
+  - routes
+    - Home
+      - components
+      - containers
+      - ducks
+        index.js
+    - Signin
+      - index.js
+      - ...
+    - Signup
+      - index.js
+      - ...
+  - shared
+    - components
+      - Header
+        - HeaderDropdown
+          - HeaderDropdown.js
+          - HeaderDropdown.less
+          - ...
+        - Header.js
+        - Header.less
+        - ...
+    - constants
+    - containers
+      - Header
+        - HeaderContainer.js
+    - middlewares
+    - modules
+      - Signin
+        - components
+          - Signin.js
+          - Signin.less
+        - containers
+          - SigninContainer.js
+      - Signup
+        - ...
+    - utils
+      - formateNumber.js
+      - trim.js
+      - ...
+      - index.js
+  - styels
+  - tempest.js
+- test
+- .babelrc
+- .eslintrc
+- .eslintignore
+- .gitignore
+- commitlint.config.js
+- jest.config.js
+- package.json
+- README.md
+- yarn.lock
+</code></pre>
+<h2 id="api"><strong>api</strong> <a class="markdownIt-Anchor" href="#api">#</a></h2>
+<p><strong>api</strong> 目录是一个基于 <a href="http://expressjs.com/">express.js</a> 搭建的一个本地 API Mock server，可以通过 <code>yarn api</code> 或是 <code>yarn start</code> 跑起来。</p>
+<p>默认本地开发调试时，所有的 API 请求都会指向它。另外，我们也加入了对 <a href="https://github.com/marak/Faker.js/">faker.js</a> 的支持，用于帮助我们生成大量的模拟数据，尽量接近真实的用户环境。</p>
+<h2 id="build"><strong>build</strong> <a class="markdownIt-Anchor" href="#build">#</a></h2>
+<p><strong>build</strong> 目录包含构建脚本和开发环境的基础配置。目前是使用 <a href="http://webpack.js.org/">Webpack</a> 来作为 <strong>module bundler</strong>。</p>
+<pre class="hljs"><code>build
+ - config.js
+ - webpack.base.js
+ - webpack.dev.js
+ - webpack.prod.js
+ - webpack.eslint.js
+ - ...
+</code></pre>
+<h2 id="scripts"><strong>scripts</strong> <a class="markdownIt-Anchor" href="#scripts">#</a></h2>
+<p><strong>scripts</strong> 目录主要包含部署，发布脚本，以及一些工具脚本，如编译打包 <strong>i18n</strong> 文件。</p>
+<pre class="hljs"><code>scripts
+  - release.js
+  - compileI18nProperties.js
+  - deployer.js
+  - bundleAnalyzer.js
+  - ...
+</code></pre>
+<p>有关发布流程，请参见<a href="/active/2017-08-25-front-end-engineering-in-active.html#%E5%8F%91%E5%B8%83">前端包发布</a></p>
+<h2 id="i18n"><strong>i18n</strong> <a class="markdownIt-Anchor" href="#i18n">#</a></h2>
+<p><strong>i18n</strong> 目录包含编译后的 <strong>i18n</strong> 文件，是以 <code>JSON</code> 格式存在的，每个 <code>JSON</code> 文件中的国际化文本消息是以键值对的形式存在。</p>
+<pre class="hljs"><code>i18n
+  - de_DE.json
+  - en_GB.json
+  - en_US.json
+  - zh_CN.json
+  - ...
+</code></pre>
+<h2 id="src"><strong>src</strong> <a class="markdownIt-Anchor" href="#src">#</a></h2>
+<p><strong>src</strong> 目录包含所有项目源代码，也就是会包含所有会被 Webpack 打包并最终发送到浏览端的代码。这样做的好处显示易见，代码更好组织管理，同时也可以让一些第三方工具（比如 Babel，Webpack）只需要处理 <strong>src</strong> 目录。</p>
+<pre class="hljs"><code>src
+  - i18n
+  - routes
+  - shared
+  - static
+  - styles
+  - index.html
+  - index.js
+</code></pre>
+<h3 id="i18n-2"><strong>i18n</strong> <a class="markdownIt-Anchor" href="#i18n-2">#</a></h3>
+<p><strong>i18n</strong> 目录包含编译前的 <strong>i18n</strong> 源文件，是以 <strong>.properties</strong> 格式存在的。</p>
+<h3 id="routes"><strong>routes</strong> <a class="markdownIt-Anchor" href="#routes">#</a></h3>
+<p><strong>routes</strong> 目录包含项目中每个路由的定义，并且路由是可以嵌套定义的。</p>
+<p>一个路由目录包含：</p>
+<ul>
+<li>必须包含一个入口文件<code>index.js</code>，由它返回与路由相对应的组件</li>
+<li><strong>components</strong>, <strong>containers</strong>, <strong>ducks(redux)</strong>, <strong>styles</strong>等等目录</li>
+<li>嵌套的子路由，如 <strong>events -&gt; events/:id</strong></li>
+</ul>
+<p>从上面看出，每个路由是由 <code>container</code> 和 <code>components</code> 来构建视图，而数据和业务逻辑则交给 <strong>reducers</strong>, <strong>actions</strong> 和 <strong>selectors</strong> ，另外，我们采用了 <a href="https://github.com/erikras/ducks-modular-redux">Ducks: Redux Reducer Bundles</a> 模式，我们会把这三块放在 <strong>ducks</strong> 目录中。</p>
+<p>这样做的好处：</p>
+<ul>
+<li>一个路由就相当于一个物理级页面，它有自己的 URL</li>
+<li>通过路由来切割页面级粒度</li>
+</ul>
+<p>在每个路由页面中，我们可以在纵向和横向不同的维度上，再进一步的抽象为不同的业务模块。</p>
+<p>具体请参考<a href="https://github.com/davezuko/react-redux-starter-kit/wiki/Fractal-Project-Structure">分形项目结构</a></p>
+<h4 id="indexjs"><strong>index.js</strong> <a class="markdownIt-Anchor" href="#indexjs">#</a></h4>
+<p>每个路由必须包含一个入口文件 <code>index.js</code> ，它主要用于加载与路由相对应的路由组件。</p>
+<p>我们希望可以把整个大的 Bundle 拆分成可以在之后异步下载的一个一个小的 Chunk，每个 Chunk 对应一个页面路由。如此一来，就允许我们首先提供粒度最小的引导 Bundle，并在稍后根据需要再异步地加载其它 Chuck。<a href="https://webpack.js.org/guides/code-splitting/">Webpack在这方面提供了相对应的代码分割支持</a>。</p>
+<p>Webpack 支持在模块中通过函数调用实现代码切割，它把 <a href="https://github.com/tc39/proposal-dynamic-import"><code>import()</code></a> 作为一个代码分离点(code split-point)，并把引入的模块作为一个单独的 Chunk。<code>import()</code> 将模块名字作为参数并返回一个 Promoise 对象，即 <code>import(name) -&gt; Promise</code>。</p>
+<pre class="hljs"><code><span class="hljs-keyword">import</span> { asyncComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'tempest.js'</span>
+
+<span class="hljs-keyword">const</span> Signin = asyncComponent(
+  <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span>
+    <span class="hljs-keyword">import</span>(<span class="hljs-comment">/* webpackChunkName: "signin" */</span>
+    <span class="hljs-string">'shared/modules/Signin/Signin'</span>).then(<span class="hljs-function"><span class="hljs-params">module</span> =&gt;</span> <span class="hljs-built_in">module</span>.default),
+  {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'Signin'</span>,
+  },
+)
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> Signin
+</code></pre>
+<blockquote>
+<p>从Webpack@2.4.0开始，它引入一个叫<a href="https://webpack.js.org/api/module-methods/#import-"><strong>magic comments</strong></a>的新Feature，它让你可以为每个异步Chunk命名，大大简化了资源的管理和SSR。</p>
+</blockquote>
+<h3 id="shared"><strong>shared</strong> <a class="markdownIt-Anchor" href="#shared">#</a></h3>
+<p><strong>shared</strong> 目录主要包含公共的 <strong>components</strong>, <strong>containers</strong>, <strong>modules(redux)</strong>，<strong>middlewares</strong>，以及一些工具函数。</p>
+<p>可能大家会很奇怪这里为什么会有这些公共的目录呢？不是应该放在对应的路由目录下面吗？</p>
+<p>这是因为我们发现，一个路由常常会跟许多 <strong>domain data</strong> 打交道，比如说，一个 Events 列表页面，不仅需要 <code>events</code>，还需要 <code>user</code> 和 <code>filter</code> 数据。从另外一个方面来讲，一个 <strong>domain data</strong> 也可以同时被多个 <code>routes</code> 共享，而它本身可能并不是一个路由。所以我们会这些公共部分提取出来，达到代码重用的目的。</p>
+<p>另外，<strong>modules</strong> 目录主要包含项目的模块。组件是构建应用的最小单元，而模块是基于组件构建的，每个页面又是基于模块的。当一个功能足够大且复杂时，我们会把它放置在 <strong>modules</strong> 目录下面，以达到重用的目的，如 <code>Signin</code>，<code>Signup</code>等等模块。</p>
+<h3 id="styles"><strong>styles</strong> <a class="markdownIt-Anchor" href="#styles">#</a></h3>
+<p><strong>styles</strong> 目录包含整个项目的公用样式结构，如 <code>Layout</code>, <code>variables</code>, <code>mixins</code>。根据就近原则，每个组件所对应的样式都是放在相对应的组件所在目录的。</p>
+<h3 id="static"><strong>static</strong> <a class="markdownIt-Anchor" href="#static">#</a></h3>
+<p><strong>static</strong> 目录主要包含静态资源文件，如 <strong>favicon.ico</strong>。</p>
+<h3 id="indexjs-2"><code>index.js</code> <a class="markdownIt-Anchor" href="#indexjs-2">#</a></h3>
+<p><code>index.js</code> 是整个项目的 JavaScript 入口文件，它主要用于初始化 React + Redux Web App，并启动整个Web App。</p>
+<p><img src="/images/react-redux-boilerplate-index-js.png" alt="index.js"></p>
+<h3 id="indexhtml"><code>index.html</code> <a class="markdownIt-Anchor" href="#indexhtml">#</a></h3>
+<p><code>index.html</code> 是整个项目的入口，所以的页面浏览都会导向这个页面，它会负责去加载项目对应的 JS/CSS 资源，它是由
+<a href="https://github.com/jantimon/html-webpack-plugin">html-webpack-plugin</a>协助生成。</p>
+<h3 id="tempestjs"><strong>tempest.js</strong> <a class="markdownIt-Anchor" href="#tempestjs">#</a></h3>
+<p><a href="https://gitlab.dev.activenetwork.com/fee/tempest.js"><strong>tempest.js</strong></a> 是我们内部基于我们的最佳实践创建一个基于 React + Redux 的框架。它默认提供了一套 <strong>API</strong>，从而帮助我们更高效便捷的创建 Redux App，并最大程度的达到代码复用的目的。</p>
+<h2 id="test"><strong>test</strong> <a class="markdownIt-Anchor" href="#test">#</a></h2>
+<p><strong>test</strong> 目录主要包含测试文件和一些测试配置文件。</p>
+<h2 id="dotfiles">dotfiles <a class="markdownIt-Anchor" href="#dotfiles">#</a></h2>
+<p>项目顶层主要还包括其它一些 dotfiles，如 .babelrc，.eslintrc。</p>
+<pre class="hljs"><code>- .babelrc
+- .eslintrc
+- .eslintignore
+- .gitignore
+- commitlint.config.js
+- jest.config.js
+- package.json
+- README.md
+- yarn.lock
+</code></pre>
+<h2 id="实践原则">实践原则 <a class="markdownIt-Anchor" href="#实践原则">#</a></h2>
+<ul>
+<li><a href="https://github.com/facebookincubator/create-react-app/issues/87#issuecomment-234627904">优先使用 <code>.js</code> 作为文件名后缀</a></li>
+<li>每个文件只包含一个 React 组件或是一个函数</li>
+<li>每个 React 组件/模块自包含，即 JS/CSS/... 包含在组件自己的目录中，文件名需要与默认导出名一致</li>
+<li>如果某个组件/模块只在另外一个组件/模块中使用，那么就让它嵌套在另外一个组件/模块目录中</li>
+</ul>
+<pre class="hljs"><code>components
+  - Header
+    - HeaderDropdown
+    - Header.js
+    - Header.less
+    - ...
+</code></pre>
+<ul>
+<li>为<strong>utils</strong> 目录添加 <code>index.js</code> 索引，由它来暴露公共 API 接口</li>
+<li>配置 <a href="https://webpack.js.org/configuration/resolve/#resolve-modules">resolve.modules</a>从而避免嵌套 <strong>imports</strong>，如 <code>import Button from '../../../../../../../shared/components/Button/Button'</code></li>
+<li>采用 <a href="https://github.com/erikras/ducks-modular-redux">Redux Ducks</a>，把 <strong>reducers</strong>，<strong>action types</strong> 以及 <strong>actions</strong> 放在一个文件中</li>
+</ul>
+<h2 id="总结"><strong>总结</strong> <a class="markdownIt-Anchor" href="#总结">#</a></h2>
+<p>目前来说，这种结构对于我们来说是一种最好的解决方案，但是这种结构并不能满足所有的情况（比如 SSR ），但是它已经足够灵活，同时支持水平扩展，我们可以很轻易的知道哪个地方添加新功能，而并不会侵入已有的逻辑。</p>
+
+      
+    </div>
+    <div  dir="ltr" class="level article-bar is-mobile">
+      <div class="level-item has-text-centered">
+        <a title="previous page" class="previouse-article-link" href="../react/index.html"><span class="icon icon-previous" data-icon="previous"></span><span class="link-content">&laquo; Previous</span></a>
+      </div>
+      <div class="level-item has-text-centered">
+        <a title="font size" class="link-item link-item-size">
+          <span class="icon icon-size" data-icon="size"></span>
+        </a>
+      </div>
+      <div class="level-item has-text-centered">
+        <a title="table of content" class="link-item link-item-toc">
+          <span class="icon icon-toc" data-icon="toc"></span>
+        </a>
+      </div>
+      <div class="level-item has-text-centered">
+        <a title="top" href="#">
+          <span class="icon icon-up" data-icon="up"></span>
+          <span class="link-content">⤊ Top</span>
+        </a>
+      </div>
+      <div class="level-item has-text-centered">
+        <a title="next page" class="next-article-link" href="../react/2017-09-08-the-simplicity-of-redux.html"><span class="icon icon-next" data-icon="next"></span><span class="link-content">Next &raquo;</span></a>
+      </div>
+    </div>
+  </div>
+  <div class="column is-2-widescreen is-hidden">
+  </div>
+</div>
+
+<div class="columns foot">
+  <div class="column is-8 is-offset-1 license">
+    <p>网站内容许可证：公共领域（public domain）</p>
+  </div>
+  <div class="column is-3 build-by">
+    Build by <a href="https://github.com/ruanyf/loppo" target="_blank">Loppo</a> 0.4.4
+  </div>
+</div>
+
+<div class="book-toc notification is-warning is-hidden">
+  <h3>Table of chapters &nbsp;<span class="title-close"><a class="button is-danger"> Close </a></span></h3>
+  <ul class="chapter-area"><li class="chapter-item "><a href="../active/index.html">ACTIVE</a>&nbsp;<a class="first-level-collapse"><span class="icon icon-expand" data-icon="expand"></span></a></li><ul class="chapter-level-1"><li class="chapter-item "><a href="../active/2017-09-25-active-development-workflow.html">活跃网络前端开发流程</a></li><li class="chapter-item "><a href="../active/2017-10-23-active-china-fee-hiring-process.html">活跃网络前端工程师招聘流程</a></li><li class="chapter-item "><a href="../active/2017-10-19-front-end-engineering-in-active.html">活跃网络的前端工程化实践之路</a></li></ul><li class="chapter-item "><a href="../react/index.html">React</a>&nbsp;<a class="first-level-collapse"><span class="icon icon-collapse" data-icon="collapse"></span></a></li><ul class="chapter-level-1 chapter-level-1-current"><li class="chapter-item chapter-item-current"><a href="../react/2017-06-04-how-we-structure-react-redux-project-stucture.html">我们如何组织 React + Redux 项目结构</a></li><li class="chapter-item "><a href="../react/2017-09-08-the-simplicity-of-redux.html">Redux的简单性</a></li><li class="chapter-item "><a href="../react/2017-09-18-how-do-we-implement-i18n-based-on-react.html">我们如何基于 React 实现 i18n</a></li></ul></ul>
+</div>
+
+<div class="progress-indicator"></div>
+
+<!-- SCRIPTS -->
+<script>
+  var LOPPO = {};
+  LOPPO.current_path = 'react/2017-06-04-how-we-structure-react-redux-project-stucture.md';
+  LOPPO.relative_root_path = '../';
+  LOPPO.article_toc = "<ul class=\"markdownIt-TOC\">\n<li><a href=\"#api\"><strong>api</strong></a></li>\n<li><a href=\"#build\"><strong>build</strong></a></li>\n<li><a href=\"#scripts\"><strong>scripts</strong></a></li>\n<li><a href=\"#i18n\"><strong>i18n</strong></a></li>\n<li><a href=\"#src\"><strong>src</strong></a>\n<ul>\n<li><a href=\"#i18n-2\"><strong>i18n</strong></a></li>\n<li><a href=\"#routes\"><strong>routes</strong></a></li>\n<li><a href=\"#shared\"><strong>shared</strong></a></li>\n<li><a href=\"#styles\"><strong>styles</strong></a></li>\n<li><a href=\"#static\"><strong>static</strong></a></li>\n<li><a href=\"#indexjs-2\"><code>index.js</code></a></li>\n<li><a href=\"#indexhtml\"><code>index.html</code></a></li>\n<li><a href=\"#tempestjs\"><strong>tempest.js</strong></a></li>\n</ul>\n</li>\n<li><a href=\"#test\"><strong>test</strong></a></li>\n<li><a href=\"#dotfiles\">dotfiles</a></li>\n<li><a href=\"#%E5%AE%9E%E8%B7%B5%E5%8E%9F%E5%88%99\">实践原则</a></li>\n<li><a href=\"#%E6%80%BB%E7%BB%93\"><strong>总结</strong></a></li>\n</ul>\n";
+</script>
+<script src="../assets/js/app.js"></script>
+
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?8abfc12836cb16954eaaccc965864e54";
+  var s = document.getElementsByTagName("script")[0];
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+</body>
+</html>
+
