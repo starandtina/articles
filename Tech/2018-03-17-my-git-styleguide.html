@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta charset="utf-8">
-<title>Git Styleguide - Front-End Enginnering</title>
+<title>My Personal Git Styleguide - Front-End Enginnering</title>
 <meta name="description" content="">
 <meta name="author" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
@@ -30,7 +30,7 @@
   </div>
   <div class="column article-container is-11-tablet is-8-desktop is-6-widescreen">
     <div class="breadcrumb-area"><a href="../index.html" class="breadcrumb-item">Home</a><span class="breadcrumb-delimiter"> &gt; </span><a href="../Tech/index.html" class="breadcrumb-item">Tech</a><span class="breadcrumb-delimiter"> &gt; </span><a href="../Tech/2018-03-17-my-git-styleguide.html" class="breadcrumb-item">Git Styleguide</a></div>
-    <h1 class="article-title">Git Styleguide</h1>
+    <h1 class="article-title">My Personal Git Styleguide</h1>
     
   <p>作者：张新</p>
 
@@ -39,8 +39,8 @@
       <h2 id="git-通用规则">Git 通用规则 <a class="markdownIt-Anchor" href="#git-通用规则">#</a></h2>
 <ul>
 <li>只能在功能分支上开发</li>
-<li>禁止直接推送代码到 maser 分支（设置为受保护分支），推荐使用合并请求（PR/MR）</li>
-<li>在发起合并请求前，请更新你本地的 master 分支并且使用交互式 rebase 操作(eg. git rebase -i --autosquash master)，从而保证你本地的提交应用于所有历史提交的最顶端，而不会去创建合并提交</li>
+<li>禁止直接推送代码到 <strong>maser</strong> 分支（设置为受保护分支），推荐使用合并请求（PR/MR）</li>
+<li>在发起合并请求前，请更新你本地的 <strong>master</strong> 分支并且使用交互式 <a href="https://dev.to/maxwell_dev/the-git-rebase-introduction-i-wish-id-had"><strong>rebase</strong></a> 操作(eg. <code>git rebase -i --autosquash master</code>)，从而保证你本地的提交应用于所有历史提交的最顶端，而不会去创建 Merge Commit</li>
 <li>在发起合并请求前，必须确保你的功能分支可以成功构建，并且通过了所有的代码规则检查和测试</li>
 <li>合并完成后，删除本地和对应的远程分支（Gitlab 或 Gitee 有选项可以自动完成）</li>
 </ul>
@@ -49,7 +49,7 @@
 <li>功能分支使用 <strong>feature/名字-项目名-简短描述</strong></li>
 <li>Bug 分支使用 <strong>fix/名字-项目名-简短描述</strong></li>
 <li>发布分支使用 <strong>release-发布日期</strong>，如果有多个发布使用 _1 形式的尾数来标识 (eg. <strong>release-20180318</strong>)</li>
-<li>Hotfix 分支 <strong>hotfix/日期-bug 标题</strong></li>
+<li>Hotfix 分支 <strong>hotfix/日期-Bug 标题</strong></li>
 </ul>
 <p>针对更加复杂的项目（如一个项目里面牵涉多个子项目），为了不影响发布，Git 分支原则如下：</p>
 <ul>
