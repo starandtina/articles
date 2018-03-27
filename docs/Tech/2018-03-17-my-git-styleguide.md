@@ -1,10 +1,10 @@
-# Git Styleguide
+# My Personal Git Styleguide
 
 ## Git 通用规则
 
 * 只能在功能分支上开发
-* 禁止直接推送代码到 maser 分支（设置为受保护分支），推荐使用合并请求（PR/MR）
-* 在发起合并请求前，请更新你本地的 master 分支并且使用交互式 rebase 操作(eg. git rebase -i --autosquash master)，从而保证你本地的提交应用于所有历史提交的最顶端，而不会去创建合并提交
+* 禁止直接推送代码到 **maser** 分支（设置为受保护分支），推荐使用合并请求（PR/MR）
+* 在发起合并请求前，请更新你本地的 **master** 分支并且使用交互式 [**rebase**](https://dev.to/maxwell_dev/the-git-rebase-introduction-i-wish-id-had) 操作(eg. `git rebase -i --autosquash master`)，从而保证你本地的提交应用于所有历史提交的最顶端，而不会去创建 Merge Commit
 * 在发起合并请求前，必须确保你的功能分支可以成功构建，并且通过了所有的代码规则检查和测试
 * 合并完成后，删除本地和对应的远程分支（Gitlab 或 Gitee 有选项可以自动完成）
 
@@ -13,7 +13,7 @@
 * 功能分支使用 **feature/名字-项目名-简短描述**
 * Bug 分支使用 **fix/名字-项目名-简短描述**
 * 发布分支使用 **release-发布日期**，如果有多个发布使用 \_1 形式的尾数来标识 (eg. **release-20180318**)
-* Hotfix 分支 **hotfix/日期-bug 标题**
+* Hotfix 分支 **hotfix/日期-Bug 标题**
 
 针对更加复杂的项目（如一个项目里面牵涉多个子项目），为了不影响发布，Git 分支原则如下：
 
