@@ -1,7 +1,7 @@
 {
   "name": "blog",
   "version": "1.0.0",
-  "description": "Front-End Enginnering",
+  "description": "Front-End Engineering",
   "main": "index.js",
   "directories": {
     "doc": "docs"
@@ -19,6 +19,7 @@
   "devDependencies": {
     "gh-pages": "0.12.0",
     "husky": "0.13.0",
-    "loppo": "0.4.4"
+    "loppo": "^0.6.15",
+    "surge": "^0.20.1"
   }
 }

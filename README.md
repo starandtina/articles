@@ -1,4 +1,4 @@
-# Front-End Enginnering
+# Front-End Engineering
 
 ![cover](docs/images/cover.jpg)
 
