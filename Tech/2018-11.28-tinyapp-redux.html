@@ -1,57 +1,8 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta charset="utf-8">
-<title>支付宝小程序 Redux Binding - Front-End Enginnering</title>
-<meta name="description" content="">
-<meta name="author" content="">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
-<link rel="stylesheet" href="../assets/css/bulma.min.css">
-<link rel="stylesheet" href="../assets/css/app.css">
-<!--[if lt IE 9]>
+<!DOCTYPE html><html><head><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta charset="utf-8"><title>支付宝小程序 Redux Binding - Front-End Engineering</title><meta name="description" content=""><meta name="author" content=""><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,minimum-scale=1"><link rel="stylesheet" href="../assets/css/bulma.min.css"><link rel="stylesheet" href="../assets/css/app.css"><!--[if lt IE 9]>
 <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/respond.js/1.4.2/respond.min.js"></script>
-<![endif]-->
-<link rel="shortcut icon" href="">
-</head>
-<body dir="LTR">
-
-<nav class="columns navbar">
-  <div class="column logo is-3 is-offset-1">
-    <a class="is-brand" href="../index.html">
-      Front-End Enginnering
-    </a>
-  </div>
-</nav>
-
-<div class="columns content">
-  <div class="column is-2-desktop is-3-widescreen is-hidden-touch">
-  </div>
-  <div class="column article-container is-11-tablet is-8-desktop is-6-widescreen">
-    <div class="breadcrumb-area"><a href="../index.html" class="breadcrumb-item">Home</a><span class="breadcrumb-delimiter"> &gt; </span><a href="../Tech/index.html" class="breadcrumb-item">Tech</a><span class="breadcrumb-delimiter"> &gt; </span><a href="../Tech/2018-11.28-tinyapp-redux.html" class="breadcrumb-item">支付宝小程序 Redux Binding</a></div>
-    <h1 class="article-title">支付宝小程序 Redux Binding</h1>
-    
-  <p>作者：张新</p>
-
-
-    <div class="article">
-      <p><a href="https://mini.open.alipay.com/channel/miniIndex.htm">支付宝小程序</a>于 2017.08 月开始公测，它是一种全新的开放模式，运行在支付宝客户端，可以被便捷地获取和传播，为终端用户提供更优的用户体验。</p>
-<p>同时，支付宝小程序也为开发者提供了丰富的开发资源，包括开发 IDE，<a href="https://docs.alipay.com/mini/component/overview">小程序组件</a>，丰富的 JSAPI 和开放接口，以及各种调试工具和最佳开发实践等等。但是，我们团队在开发时仍然会遇到很多问题，本篇主要讨论如何解决整个小程序 Web App 的状态管理。</p>
-<p>目前，团队里面很多前端同学都是有 React + Redux 开发技术背景，所以第一考虑就是提供基于支付小程序的 Redux Binding，以便无缝对接，快速开发，没有学习成本。</p>
-<p>我们希望它能提供如下的功能：</p>
-<ul>
-<li>提供和 <a href="https://github.com/reduxjs/react-redux">react-redux </a>一样简单方便的 API (Provider &amp; connect)</li>
-<li>同时支持 <a href="https://docs.alipay.com/mini/framework/custom-component-overview">Component</a> 和  <a href="https://docs.alipay.com/mini/framework/page">Page</a></li>
-</ul>
-<p>然后就有了 <a href="https://github.com/starandtina/tinyapp-redux">tinyapp-redux</a> :) ，那么，它是如何和支付宝不程序协调工作，来帮我们统一管理数据流的呢？原理与 react-redux 异曲同工，还是分二步走：</p>
-<h2 id="installation">Installation <a class="markdownIt-Anchor" href="#installation">#</a></h2>
-<pre class="hljs"><code>npm install --save tinyapp-redux
-</code></pre>
-<h2 id="provider">Provider <a class="markdownIt-Anchor" href="#provider">#</a></h2>
-<p>tinyapp-redux 提供了 <code>Provider</code> ，它可以让 <code>Redux store</code> 在其它的小程序页面或是组件中都可以直接 <code>connect</code> 自己需要的数据。</p>
-<p><strong>app.js</strong></p>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> { Provider } <span class="hljs-keyword">from</span> <span class="hljs-string">'tinyapp-redux'</span>
+<![endif]--><link rel="shortcut icon" href=""></head><body dir="ltr"><nav class="columns navbar"><div class="column logo is-3 is-offset-1"><a class="is-brand" href="../index.html">Front-End Engineering</a></div></nav><div class="columns content"><div class="column is-2-desktop is-3-widescreen is-hidden-touch"></div><div class="column article-container is-11-tablet is-8-desktop is-6-widescreen"><div class="breadcrumb-area"><a href="../index.html" class="breadcrumb-item">Home</a><span class="breadcrumb-delimiter"> &gt; </span><a href="../Tech/index.html" class="breadcrumb-item">Tech</a><span class="breadcrumb-delimiter"> &gt; </span><a href="../Tech/2018-11.28-tinyapp-redux.html" class="breadcrumb-item">支付宝小程序 Redux Binding</a></div><h1 class="article-title">支付宝小程序 Redux Binding</h1><p>作者：张新</p><div class="article"><p><a href="https://mini.open.alipay.com/channel/miniIndex.htm" target="_blank" rel="noopener">支付宝小程序</a>于 2017.08 月开始公测，它是一种全新的开放模式，运行在支付宝客户端，可以被便捷地获取和传播，为终端用户提供更优的用户体验。</p><p>同时，支付宝小程序也为开发者提供了丰富的开发资源，包括开发 IDE，<a href="https://docs.alipay.com/mini/component/overview" target="_blank" rel="noopener">小程序组件</a>，丰富的 JSAPI 和开放接口，以及各种调试工具和最佳开发实践等等。但是，我们团队在开发时仍然会遇到很多问题，本篇主要讨论如何解决整个小程序 Web App 的状态管理。</p><p>目前，团队里面很多前端同学都是有 React + Redux 开发技术背景，所以第一考虑就是提供基于支付小程序的 Redux Binding，以便无缝对接，快速开发，没有学习成本。</p><p>我们希望它能提供如下的功能：</p><ul><li>提供和 <a href="https://github.com/reduxjs/react-redux" target="_blank" rel="noopener">react-redux </a>一样简单方便的 API (Provider &amp; connect)</li><li>同时支持 <a href="https://docs.alipay.com/mini/framework/custom-component-overview" target="_blank" rel="noopener">Component</a> 和 <a href="https://docs.alipay.com/mini/framework/page" target="_blank" rel="noopener">Page</a></li></ul><p>然后就有了 <a href="https://github.com/starandtina/tinyapp-redux" target="_blank" rel="noopener">tinyapp-redux</a> 😃 ，那么，它是如何和支付宝不程序协调工作，来帮我们统一管理数据流的呢？原理与 react-redux 异曲同工，还是分二步走：</p><h2 id="installation">Installation <a class="markdownIt-Anchor" href="#installation">#</a></h2><pre class="hljs"><code>npm install --save tinyapp-redux
+</code></pre><h2 id="provider">Provider <a class="markdownIt-Anchor" href="#provider">#</a></h2><p>tinyapp-redux 提供了 <code>Provider</code> ，它可以让 <code>Redux store</code> 在其它的小程序页面或是组件中都可以直接 <code>connect</code> 自己需要的数据。</p><p><strong>app.js</strong></p><pre class="hljs"><code><span class="hljs-keyword">import</span> { Provider } <span class="hljs-keyword">from</span> <span class="hljs-string">'tinyapp-redux'</span>
 <span class="hljs-keyword">import</span> store <span class="hljs-keyword">from</span> <span class="hljs-string">'./createStore'</span>
 
 App(
@@ -62,9 +13,7 @@ App(
     ...
   }),
 )
-</code></pre>
-<p><strong>createStore.js</strong></p>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> { createStore, applyMiddleware } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux'</span>
+</code></pre><p><strong>createStore.js</strong></p><pre class="hljs"><code><span class="hljs-keyword">import</span> { createStore, applyMiddleware } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux'</span>
 <span class="hljs-keyword">import</span> logger <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-logger'</span>
 <span class="hljs-keyword">import</span> rootReducer <span class="hljs-keyword">from</span> <span class="hljs-string">'./reducers'</span>
 
@@ -80,10 +29,7 @@ App(
 
 
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> store
-</code></pre>
-<p>或者通过默认提供的 <code>injectStore</code> 函数来注入当前 <code>store</code></p>
-<p><strong>app.js</strong></p>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> { createStore, applyMiddleware } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux'</span>
+</code></pre><p>或者通过默认提供的 <code>injectStore</code> 函数来注入当前 <code>store</code></p><p><strong>app.js</strong></p><pre class="hljs"><code><span class="hljs-keyword">import</span> { createStore, applyMiddleware } <span class="hljs-keyword">from</span> <span class="hljs-string">'redux'</span>
 <span class="hljs-keyword">import</span> { injectStore } <span class="hljs-keyword">from</span> <span class="hljs-string">'tinyapp-redux'</span>
 <span class="hljs-keyword">import</span> logger <span class="hljs-keyword">from</span> <span class="hljs-string">'redux-logger'</span>
 
@@ -104,10 +50,7 @@ App({
     injectStore(<span class="hljs-keyword">this</span>.store) <span class="hljs-comment">// inject the store into the tiny app</span>
   },
 })
-</code></pre>
-<h2 id="connect">Connect <a class="markdownIt-Anchor" href="#connect">#</a></h2>
-<p>tinyapp-redux 提供了一个 <code>connect</code> 函数，用于绑定小程序页面/组件到 <code>Redux store</code> ，从而很方便地去获取任何需要的数据。</p>
-<pre class="hljs"><code><span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">'tinyapp-redux'</span>
+</code></pre><h2 id="connect">Connect <a class="markdownIt-Anchor" href="#connect">#</a></h2><p>tinyapp-redux 提供了一个 <code>connect</code> 函数，用于绑定小程序页面/组件到 <code>Redux store</code> ，从而很方便地去获取任何需要的数据。</p><pre class="hljs"><code><span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">'tinyapp-redux'</span>
 
 <span class="hljs-keyword">import</span> {
   toggleTodo,
@@ -135,74 +78,4 @@ Page(
     },
   ),
 )
-</code></pre>
-<p>tinyapp-redux 可以帮助我们管理支付宝小程序的数据流，那么如何组织整个代码结构? Stay tuned!</p>
-
-      
-    </div>
-    <div  dir="ltr" class="level article-bar is-mobile">
-      <div class="level-item has-text-centered">
-        <a title="previous page" class="previouse-article-link" href="../Tech/index.html"><span class="icon icon-previous" data-icon="previous"></span><span class="link-content">&laquo; Previous</span></a>
-      </div>
-      <div class="level-item has-text-centered">
-        <a title="font size" class="link-item link-item-size">
-          <span class="icon icon-size" data-icon="size"></span>
-        </a>
-      </div>
-      <div class="level-item has-text-centered">
-        <a title="table of content" class="link-item link-item-toc">
-          <span class="icon icon-toc" data-icon="toc"></span>
-        </a>
-      </div>
-      <div class="level-item has-text-centered">
-        <a title="top" href="#">
-          <span class="icon icon-up" data-icon="up"></span>
-          <span class="link-content">⤊ Top</span>
-        </a>
-      </div>
-      <div class="level-item has-text-centered">
-        <a title="next page" class="next-article-link" href="../Tech/2017-09-01-checklist-job-offer.html"><span class="icon icon-next" data-icon="next"></span><span class="link-content">Next &raquo;</span></a>
-      </div>
-    </div>
-  </div>
-  <div class="column is-2-widescreen is-hidden">
-  </div>
-</div>
-
-<div class="columns foot">
-  <div class="column is-8 is-offset-1 license">
-    <p>网站内容许可证：公共领域（public domain）</p>
-  </div>
-  <div class="column is-3 build-by">
-    Build by <a href="https://github.com/ruanyf/loppo" target="_blank">Loppo</a> 0.4.4
-  </div>
-</div>
-
-<div class="book-toc notification is-warning is-hidden">
-  <h3>Table of chapters &nbsp;<span class="title-close"><a class="button is-danger"> Close </a></span></h3>
-  <ul class="chapter-area"><li class="chapter-item "><a href="../Life/index.html">Life</a>&nbsp;<a class="first-level-collapse"><span class="icon icon-expand" data-icon="expand"></span></a></li><ul class="chapter-level-1"><li class="chapter-item "><a href="../Life/2016-08-30-keys-to-have-health-relationship.html">作为一个开发者，如何去维系和增进健康的人际关系？</a></li><li class="chapter-item "><a href="../Life/2018-03-13-maintaining-a-healthy-work-life-balance.html">如何在工作和工作中找到一个健康的平衡呢？</a></li></ul><li class="chapter-item "><a href="../Tech/index.html">Tech</a>&nbsp;<a class="first-level-collapse"><span class="icon icon-collapse" data-icon="collapse"></span></a></li><ul class="chapter-level-1 chapter-level-1-current"><li class="chapter-item chapter-item-current"><a href="../Tech/2018-11.28-tinyapp-redux.html">支付宝小程序 Redux Binding</a></li><li class="chapter-item "><a href="../Tech/2017-09-01-checklist-job-offer.html">工作机会的检查清单</a></li><li class="chapter-item "><a href="../Tech/2017-11-03-front-end-development-process.html">前端开发流程</a></li><li class="chapter-item "><a href="../Tech/2018-03-14-move-from-sb-to-code.html">我为什么放弃 Sublime Text 而转向 VSC？</a></li><li class="chapter-item "><a href="../Tech/2018-03-27-my-git-styleguide.html">My Personal Git Styleguide</a></li><li class="chapter-item "><a href="../Tech/2018-08-25-full-stack-engineering.html">WTF Full-Stack Engineering</a></li><li class="chapter-item "><a href="../Tech/Active/index.html">Active</a></li><ul class="chapter-level-2"><li class="chapter-item "><a href="../Tech/Active/2017-09-25-active-development-workflow.html">活跃网络前端开发流程</a></li><li class="chapter-item "><a href="../Tech/Active/2017-10-19-front-end-engineering-in-active.html">活跃网络的前端工程化实践之路</a></li><li class="chapter-item "><a href="../Tech/Active/2017-10-23-active-china-fee-hiring-process.html">Active China Front-End Engineer Hiring Process</a></li></ul><li class="chapter-item "><a href="../Tech/React/index.html">React</a></li><ul class="chapter-level-2"><li class="chapter-item "><a href="../Tech/React/2017-06-04-how-we-structure-react-redux-project-stucture.html">我们如何组织 React + Redux 项目结构</a></li><li class="chapter-item "><a href="../Tech/React/2017-08-07-how-do-we-normalize-state.html">我们如何范式化 Redux 状态的</a></li><li class="chapter-item "><a href="../Tech/React/2017-09-08-the-simplicity-of-redux.html">Redux 的简单性</a></li><li class="chapter-item "><a href="../Tech/React/2017-09-18-how-do-we-implement-i18n-based-on-react.html">我们如何基于 React 实现 i18n</a></li></ul></ul></ul>
-</div>
-
-<div class="progress-indicator"></div>
-
-<!-- SCRIPTS -->
-<script>
-  var LOPPO = {};
-  LOPPO.current_path = 'Tech/2018-11.28-tinyapp-redux.md';
-  LOPPO.relative_root_path = '../';
-  LOPPO.article_toc = "<ul class=\"markdownIt-TOC\">\n<li><a href=\"#installation\">Installation</a></li>\n<li><a href=\"#provider\">Provider</a></li>\n<li><a href=\"#connect\">Connect</a></li>\n</ul>\n";
-</script>
-<script src="../assets/js/app.js"></script>
-
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "https://hm.baidu.com/hm.js?8abfc12836cb16954eaaccc965864e54";
-  var s = document.getElementsByTagName("script")[0];
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
-</body>
-</html>
-
+</code></pre><p>tinyapp-redux 可以帮助我们管理支付宝小程序的数据流，那么如何组织整个代码结构? Stay tuned!</p></div><div dir="ltr" class="level article-bar is-mobile"><div class="level-item has-text-centered"><a title="previous page" class="previouse-article-link" href="../Tech/2018-08-25-full-stack-engineering.html"><span class="icon icon-previous" data-icon="previous"></span><span class="link-content">&laquo; Previous</span></a></div><div class="level-item has-text-centered"><a title="font size" class="link-item link-item-size"><span class="icon icon-size" data-icon="size"></span></a></div><div class="level-item has-text-centered"><a title="table of content" class="link-item link-item-toc"><span class="icon icon-toc" data-icon="toc"></span></a></div><div class="level-item has-text-centered"><a title="top" href="#"><span class="icon icon-up" data-icon="up"></span> <span class="link-content">⤊ Top</span></a></div><div class="level-item has-text-centered"><a title="next page" class="next-article-link" href="../Tech/Active/index.html"><span class="icon icon-next" data-icon="next"></span><span class="link-content">Next &raquo;</span></a></div></div></div><div class="column is-2-widescreen is-hidden"></div></div><div class="columns foot"><div class="column is-8 is-offset-1 license"><p>网站内容许可证：公共领域（public domain）</p></div><div class="column is-3 build-by">Build by <a href="https://github.com/ruanyf/loppo" target="_blank">Loppo</a> 0.6.15</div></div><div class="book-toc notification is-warning is-hidden"><h3>Table of chapters &nbsp;<span class="title-close"><a class="button is-danger"> Close</a></span></h3><ul class="chapter-area"><li class="chapter-item"><a href="../2019-09-04-talent-requirement.html">对人才的要求</a></li><li class="chapter-item"><a href="../Tech/index.html">Tech</a>&nbsp;<a class="first-level-collapse"><span class="icon icon-collapse" data-icon="collapse"></span></a></li><ul class="chapter-level-1 chapter-level-1-current"><li class="chapter-item"><a href="../Tech/2017-09-01-checklist-job-offer.html">工作机会的检查清单</a></li><li class="chapter-item"><a href="../Tech/2017-11-03-front-end-development-process.html">前端开发流程</a></li><li class="chapter-item"><a href="../Tech/2018-03-14-move-from-sb-to-code.html">我为什么放弃 Sublime Text 而转向 VSC？</a></li><li class="chapter-item"><a href="../Tech/2018-03-27-my-git-styleguide.html">My Personal Git Styleguide</a></li><li class="chapter-item"><a href="../Tech/2018-08-25-full-stack-engineering.html">WTF Full-Stack Engineering</a></li><li class="chapter-item chapter-item-current"><a href="../Tech/2018-11.28-tinyapp-redux.html">支付宝小程序 Redux Binding</a></li><li class="chapter-item"><a href="../Tech/Active/index.html">Active</a></li><ul class="chapter-level-2"><li class="chapter-item"><a href="../Tech/Active/2017-09-25-active-development-workflow.html">活跃网络前端开发流程</a></li><li class="chapter-item"><a href="../Tech/Active/2017-10-19-front-end-engineering-in-active.html">活跃网络的前端工程化实践之路</a></li><li class="chapter-item"><a href="../Tech/Active/2017-10-23-active-china-fee-hiring-process.html">Active China Front-End Engineer Hiring Process</a></li></ul><li class="chapter-item"><a href="../Tech/React/index.html">React</a></li><ul class="chapter-level-2"><li class="chapter-item"><a href="../Tech/React/2017-06-04-how-we-structure-react-redux-project-stucture.html">我们如何组织 React + Redux 项目结构</a></li><li class="chapter-item"><a href="../Tech/React/2017-08-07-how-do-we-normalize-state.html">我们如何范式化 Redux 状态的</a></li><li class="chapter-item"><a href="../Tech/React/2017-09-08-the-simplicity-of-redux.html">Redux 的简单性</a></li><li class="chapter-item"><a href="../Tech/React/2017-09-18-how-do-we-implement-i18n-based-on-react.html">我们如何基于 React 实现 i18n</a></li></ul></ul><li class="chapter-item"><a href="../life/index.html">life</a>&nbsp;<a class="first-level-collapse"><span class="icon icon-expand" data-icon="expand"></span></a></li><ul class="chapter-level-1"><li class="chapter-item"><a href="../life/2016-08-30-keys-to-have-health-relationship.html">作为一个开发者，如何去维系和增进健康的人际关系？</a></li><li class="chapter-item"><a href="../life/2018-03-13-maintaining-a-healthy-work-life-balance.html">如何在工作和工作中找到一个健康的平衡呢？</a></li></ul></ul></div><div class="progress-indicator"></div><!-- SCRIPTS --><script>var LOPPO={current_path:"Tech/2018-11.28-tinyapp-redux.md",relative_root_path:"../",article_toc:'<ul class="markdownIt-TOC">\n<li><a href="#installation">Installation</a></li>\n<li><a href="#provider">Provider</a></li>\n<li><a href="#connect">Connect</a></li>\n</ul>\n'}</script><script src="../assets/js/app.js"></script><script>var _hmt=_hmt||[];!function(){var e=document.createElement("script");e.src="https://hm.baidu.com/hm.js?8abfc12836cb16954eaaccc965864e54";var t=document.getElementsByTagName("script")[0];t.parentNode.insertBefore(e,t)}()</script></body></html>
